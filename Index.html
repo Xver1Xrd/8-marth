@@ -1,0 +1,245 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Для Вероники - 8 Марта</title>
+  <meta name="description" content="Нежная интерактивная открытка: конверт, галерея, мини-игра и маленькая магия.">
+  <meta name="theme-color" content="#ef4f8e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Marck+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-ornament bg-ornament-a" aria-hidden="true"></div>
+  <div class="bg-ornament bg-ornament-b" aria-hidden="true"></div>
+  <div class="bg-ornament bg-ornament-c" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">💐</span>
+        <div class="brand-copy">
+          <strong>Вероника</strong>
+          <span class="badge" id="badge">8 Марта - маленькая магия</span>
+        </div>
+      </div>
+
+      <div class="actions-row actions-row-header">
+        <button class="btn-primary" id="magicBtn" type="button">&#1042;&#1082;&#1083;&#1102;&#1095;&#1080;&#1090;&#1100; &#1084;&#1072;&#1075;&#1080;&#1102; &#10024;</button>
+        <button id="heartsBtn" type="button">Запустить сердечки 💖</button>
+        <button id="resetBtn" type="button" title="Сбросить сохраненные данные">Сброс</button>
+        <button id="themeBtn" class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" title="Switch theme">&#127769;</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <section class="hero">
+      <article class="card intro-card reveal">
+        <h1>Вероника, с 8 Марта 💞</h1>
+        <p class="subtext">
+          Небольшая живая открытка, где есть сюрприз в конверте, наши фото и мини-игра.
+          Нажми "Включить магию", а дальше просто улыбайся.
+        </p>
+
+        <div class="chips" aria-label="Настроение открытки">
+          <span class="chip"><span class="dot dot-pink"></span> нежная</span>
+          <span class="chip"><span class="dot dot-violet"></span> добрая</span>
+          <span class="chip"><span class="dot dot-mint"></span> невероятно красивая</span>
+          <span class="chip"><span class="dot dot-gold"></span> просто лучшая</span>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn-primary" id="openLetterBtn" type="button">Открыть конверт 💌</button>
+          <button id="scrollToPhotosBtn" type="button">К фото 📸</button>
+          <button id="scrollToQuizBtn" type="button">К мини-игре 🎯</button>
+        </div>
+      </article>
+
+      <aside class="card envelope-card reveal reveal-delay-1">
+        <div class="card-title-line">
+          <h2>Секретный конверт</h2>
+          <span class="small">нажми на конверт</span>
+        </div>
+
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Открыть или закрыть конверт">
+          <div class="env-base"></div>
+          <div class="env-flap"></div>
+          <div class="env-pocket"></div>
+
+          <article class="letter" id="letter" aria-live="polite">
+            <h3>Моя Вероника ✨</h3>
+            <p id="letterText">
+              Я хотел подарить что-то особенное - не просто цветы, а эмоции.
+              Ты делаешь меня лучше, а также мой мир теплее.
+              Пусть сегодня будет много улыбок, легкости и любви.
+            </p>
+            <p class="sig" id="sig">- от Ярика 💖</p>
+          </article>
+        </div>
+
+        <div class="env-controls">
+          <p class="small" id="envState">Состояние: закрыто</p>
+          <button id="editLetterBtn" type="button">Изменить текст ✍️</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-grid">
+      <article class="card reveal reveal-delay-2" id="photosSection">
+        <div class="card-title-line">
+          <h2>Ваши совместные фото 📸</h2>
+          <span class="small">автозагрузка из папки foto</span>
+        </div>
+        <p class="subtext">
+          Фото автоматически берутся из папки <b>foto</b>.
+          Подписи к снимкам можно менять в просмотре, и они сохраняются в браузере.
+        </p>
+
+        <div class="dropzone" id="photoDrop">
+          <p class="small">Ручной выбор отключен. Добавь файлы в папку <b>foto</b> и обнови страницу.</p>
+        </div>
+
+        <div class="gallery" id="gallery"></div>
+      </article>
+
+      <article class="card reveal reveal-delay-3" id="quizSection">
+        <h2 id="quizAnchor">
+          Мини-игра "Поймай настроение"
+          <button id="pongTrigger" class="emoji-trigger" type="button" aria-label="Открыть пинг-понг">🎯</button>
+        </h2>
+        <p class="subtext">
+          Выбери по одному варианту в каждом вопросе, а сайт соберет итоговое настроение дня.
+        </p>
+        <p class="quiz-progress small" id="quizProgress">Ответов выбрано: 0/3</p>
+
+        <div class="quiz" id="quiz">
+          <div class="q" data-q="1">
+            <div class="q-title-line">
+              <strong>1) Что хочется больше всего?</strong>
+              <span class="small">выбери 1</span>
+            </div>
+            <div class="answers">
+              <button data-score="2" type="button">Обнимашки 🤗</button>
+              <button data-score="1" type="button">мармеладки 🍓</button>
+              <button data-score="3" type="button">повайбовать вместе ✈️</button>
+            </div>
+          </div>
+
+          <div class="q" data-q="2">
+            <div class="q-title-line">
+              <strong>2) Цвет сегодняшнего дня?</strong>
+              <span class="small">выбери 1</span>
+            </div>
+            <div class="answers">
+              <button data-score="2" type="button">Розовый 💗</button>
+              <button data-score="3" type="button">фиолетовый 💜</button>
+              <button data-score="1" type="button">Золотой ✨</button>
+            </div>
+          </div>
+
+          <div class="q" data-q="3">
+            <div class="q-title-line">
+              <strong>3) Музыка настроения?</strong>
+              <span class="small">выбери 1</span>
+            </div>
+            <div class="answers">
+              <button data-score="1" type="button">Нежная 🎶</button>
+              <button data-score="2" type="button">Танцевальная 💃</button>
+              <button data-score="3" type="button">Космическая 🌌</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="result" id="result" aria-live="polite"></div>
+        <div class="actions-row">
+          <button class="btn-primary" id="finishBtn" type="button">Получить итог 💝</button>
+          <button id="retryBtn" type="button">Сбросить игру 🔁</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-grid section-grid-single">
+      <article class="card compliment-card reveal reveal-delay-4">
+        <h2>Комплимент дня</h2>
+        <p class="compliment-text is-visible" id="complimentText">Ты сегодня особенно прекрасна.</p>
+        <div class="actions-row">
+          <button class="btn-primary" id="complimentBtn" type="button">Новый комплимент</button>
+          <button id="toastBtn" type="button">Сказать "люблю" 🥰</button>
+        </div>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      Подсказки: клавиша <b>H</b> запускает сердечки, клавиша <b>M</b> включает магию, найди секретную игру.
+    </footer>
+  </main>
+
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-label="Просмотр фото">
+      <div class="modal-box">
+        <div class="modal-top">
+          <div id="modalTitle">Фото</div>
+          <div class="actions-row">
+            <button id="prevPhotoBtn" type="button" aria-label="Предыдущее фото">◀</button>
+            <button id="nextPhotoBtn" type="button" aria-label="Следующее фото">▶</button>
+            <button id="closeModalBtn" type="button">Закрыть ✕</button>
+          </div>
+        </div>
+        <img class="modal-img" id="modalImg" alt="Открытое фото">
+        <div class="modal-caption-panel">
+          <label class="small" for="modalCaptionInput">Подпись к фото</label>
+          <input
+            id="modalCaptionInput"
+            class="modal-caption-input"
+            type="text"
+            placeholder="Добавь подпись к этому фото..."
+            maxlength="160"
+          >
+        </div>
+      </div>
+  </div>
+
+  <div class="modal" id="pongModal" aria-hidden="true" role="dialog" aria-label="Пинг-понг">
+    <div class="modal-box pong-modal-box">
+      <div class="modal-top">
+        <div>
+          <strong>Пинг-понг любви</strong>
+          <span class="small pong-score-line">Счёт: <b id="pongScore">0</b></span>
+        </div>
+        <div class="actions-row">
+          <button class="btn-primary" id="pongStartBtn" type="button">Старт ▶</button>
+          <button id="pongCloseBtn" type="button">Закрыть ✕</button>
+        </div>
+      </div>
+      <p class="pong-hint small" id="pongHint">
+        Раунд 1/1: двигай платформу стрелками, A/D или пальцем. Сердце 🩷 набирает очки за отскоки и цели.
+      </p>
+      <canvas id="pongCanvas" class="pong-canvas" width="760" height="500" aria-label="Пинг-понг с сердцем"></canvas>
+      <div class="pong-win" id="pongWin" aria-hidden="true">
+        <div class="pong-win-inner">
+          <p class="pong-win-kicker">Победа</p>
+          <h3>Вероника, ты молодец! 💖</h3>
+          <p class="small" id="pongWinText">Ты прошла пинг-понг. Я тобой очень горжусь.</p>
+          <div class="actions-row">
+            <button class="btn-primary" id="pongReplayBtn" type="button">Сыграть ещё</button>
+            <button id="pongWinCloseBtn" type="button">Закрыть</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/app-core.js" defer></script>
+  <script src="./js/ui-effects.js" defer></script>
+  <script src="./js/photos-ui.js" defer></script>
+  <script src="./js/pong.js" defer></script>
+  <script src="./js/photo-storage.js" defer></script>
+  <script src="./js/app-tail.js" defer></script>
+</body>
+</html>
+

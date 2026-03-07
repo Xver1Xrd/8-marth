@@ -1,0 +1,167 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1600" viewBox="0 0 2000 1600" fill="none">
+  <defs>
+    <style>
+      .title { font: 700 34px "Arial", sans-serif; fill: #1f1626; }
+      .label { font: 600 18px "Arial", sans-serif; fill: #2e1c34; }
+      .text { font: 500 17px "Arial", sans-serif; fill: #2e1c34; }
+      .small { font: 500 14px "Arial", sans-serif; fill: #5d4868; }
+      .line { stroke: #4a2f5a; stroke-width: 2.3; fill: #fff; }
+      .line-soft { stroke: #5f426f; stroke-width: 2; fill: #fff; }
+      .arrow { stroke: #4a2f5a; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .arrow-dash { stroke: #4a2f5a; stroke-width: 2.2; fill: none; stroke-dasharray: 9 7; marker-end: url(#arrow); }
+      .term { fill: #fff3f8; stroke: #b95b8b; stroke-width: 2.5; }
+      .proc { fill: #fff; stroke: #6f4b82; stroke-width: 2.2; }
+      .io { fill: #f7f1ff; stroke: #6f4b82; stroke-width: 2.2; }
+      .dec { fill: #fff; stroke: #6f4b82; stroke-width: 2.2; }
+      .data { fill: #fdf7ff; stroke: #6f4b82; stroke-width: 2.2; }
+      .subp { fill: #fff8fc; stroke: #6f4b82; stroke-width: 2.2; }
+      .legend { fill: #faf7ff; stroke: #cab6d8; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4a2f5a"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="1960" height="1560" rx="20" fill="#fff" stroke="#d7c6e2"/>
+  <text x="1000" y="72" text-anchor="middle" class="title">Блок-схема работы сайта (ГОСТ 19.701-90)</text>
+
+  <ellipse cx="1000" cy="130" rx="290" ry="42" class="term"/>
+  <text x="1000" y="136" text-anchor="middle" class="label">Начало: загрузка Index.html + styles.css + script.js</text>
+
+  <rect x="760" y="210" width="480" height="96" rx="8" class="proc"/>
+  <text x="1000" y="248" text-anchor="middle" class="text">Инициализация приложения</text>
+  <text x="1000" y="274" text-anchor="middle" class="small">bindEvents, loadTheme, loadLetter, loadPhotos, render UI</text>
+
+  <polygon points="790,350 1240,350 1210,442 760,442" class="io"/>
+  <text x="998" y="391" text-anchor="middle" class="text">Пользовательское событие</text>
+  <text x="998" y="415" text-anchor="middle" class="small">клик / клавиши / drag&amp;drop / импорт / модалки</text>
+
+  <polygon points="1000,480 1230,560 1000,640 770,560" class="dec"/>
+  <text x="1000" y="555" text-anchor="middle" class="text">Какой тип события?</text>
+  <text x="1000" y="580" text-anchor="middle" class="small">ветвление по обработчикам</text>
+
+  <rect x="220" y="420" width="420" height="90" rx="8" class="proc"/>
+  <text x="430" y="460" text-anchor="middle" class="text">Конверт / Магия / Сердечки</text>
+  <text x="430" y="484" text-anchor="middle" class="small">анимации, toast, confetti, badge</text>
+
+  <rect x="220" y="560" width="420" height="90" rx="8" class="proc"/>
+  <text x="430" y="600" text-anchor="middle" class="text">Квизы и комплименты</text>
+  <text x="430" y="624" text-anchor="middle" class="small">обновление DOM и состояния</text>
+
+  <rect x="220" y="740" width="420" height="96" rx="8" class="proc"/>
+  <text x="430" y="780" text-anchor="middle" class="text">Галерея фото</text>
+  <text x="430" y="804" text-anchor="middle" class="small">добавить/удалить/перемешать/подпись/модалка</text>
+
+  <ellipse cx="430" cy="876" rx="160" ry="20" class="data"/>
+  <rect x="270" y="876" width="320" height="80" class="data"/>
+  <ellipse cx="430" cy="956" rx="160" ry="20" class="data"/>
+  <text x="430" y="922" text-anchor="middle" class="text">localStorage: photos</text>
+
+  <rect x="1360" y="420" width="420" height="90" rx="8" class="proc"/>
+  <text x="1570" y="460" text-anchor="middle" class="text">Переключение темы</text>
+  <text x="1570" y="484" text-anchor="middle" class="small">applyTheme + смена иконки кнопки</text>
+
+  <ellipse cx="1570" cy="548" rx="150" ry="19" class="data"/>
+  <rect x="1420" y="548" width="300" height="70" class="data"/>
+  <ellipse cx="1570" cy="618" rx="150" ry="19" class="data"/>
+  <text x="1570" y="588" text-anchor="middle" class="text">localStorage: theme</text>
+
+  <rect x="1360" y="680" width="420" height="90" rx="8" class="proc"/>
+  <text x="1570" y="720" text-anchor="middle" class="text">Сброс сайта</text>
+  <text x="1570" y="744" text-anchor="middle" class="small">очистка state + localStorage + UI reset</text>
+
+  <rect x="760" y="760" width="480" height="90" rx="8" class="proc"/>
+  <text x="1000" y="800" text-anchor="middle" class="text">Викторина: клик по 🎯 ?</text>
+  <text x="1000" y="824" text-anchor="middle" class="small">если нет — обычный подсчёт настроения</text>
+
+  <rect x="1360" y="840" width="420" height="90" rx="8" class="proc"/>
+  <text x="1570" y="880" text-anchor="middle" class="text">Открыть модалку Pong</text>
+  <text x="1570" y="904" text-anchor="middle" class="small">canvas, controls, счет</text>
+
+  <rect x="1360" y="970" width="420" height="120" rx="8" class="subp"/>
+  <line x1="1378" y1="970" x2="1378" y2="1090" class="line-soft"/>
+  <line x1="1762" y1="970" x2="1762" y2="1090" class="line-soft"/>
+  <text x="1570" y="1024" text-anchor="middle" class="text">Подпрограмма: Пинг-понг 1/1</text>
+  <text x="1570" y="1048" text-anchor="middle" class="small">физика мяча 🩷, платформа, блоки, счет</text>
+
+  <polygon points="1570,1128 1730,1200 1570,1272 1410,1200" class="dec"/>
+  <text x="1570" y="1196" text-anchor="middle" class="text">Все блоки сбиты?</text>
+  <text x="1570" y="1220" text-anchor="middle" class="small">Да / Нет</text>
+
+  <rect x="1360" y="1310" width="420" height="100" rx="8" class="proc"/>
+  <text x="1570" y="1352" text-anchor="middle" class="text">Победа: "Ты молодец"</text>
+  <text x="1570" y="1376" text-anchor="middle" class="small">win-overlay + сердца + конфетти + toast</text>
+
+  <ellipse cx="1000" cy="1490" rx="300" ry="40" class="term"/>
+  <text x="1000" y="1496" text-anchor="middle" class="label">Конец: закрытие вкладки (цикл событий до завершения)</text>
+
+  <!-- Arrows main -->
+  <path d="M1000 172 L1000 210" class="arrow"/>
+  <path d="M1000 306 L1000 350" class="arrow"/>
+  <path d="M1000 442 L1000 480" class="arrow"/>
+
+  <!-- Branch arrows from decision -->
+  <path d="M770 560 L640 560 L640 465" class="arrow"/>
+  <text x="654" y="506" class="small">UI/анимации</text>
+
+  <path d="M1230 560 L1360 560 L1360 465" class="arrow"/>
+  <text x="1278" y="540" class="small">Тема</text>
+
+  <path d="M900 605 L640 605 L640 785" class="arrow"/>
+  <text x="650" y="700" class="small">Фото</text>
+
+  <path d="M1000 640 L1000 760" class="arrow"/>
+  <text x="1012" y="706" class="small">Квиз</text>
+
+  <path d="M1120 605 L1360 605 L1360 725" class="arrow"/>
+  <text x="1262" y="700" class="small">Сброс</text>
+
+  <!-- From quiz to pong -->
+  <path d="M1240 805 L1360 885" class="arrow"/>
+  <text x="1288" y="842" class="small">Да, клик по 🎯</text>
+
+  <path d="M1570 930 L1570 970" class="arrow"/>
+  <path d="M1570 1090 L1570 1128" class="arrow"/>
+
+  <!-- Pong decision loop -->
+  <path d="M1410 1200 L1305 1200 L1305 1030 L1360 1030" class="arrow"/>
+  <text x="1248" y="1112" class="small">Нет</text>
+
+  <path d="M1570 1272 L1570 1310" class="arrow"/>
+  <text x="1582" y="1296" class="small">Да</text>
+
+  <!-- Return to event loop -->
+  <path d="M430 510 L430 350 L790 350" class="arrow"/>
+  <path d="M430 650 L430 350" class="arrow"/>
+  <path d="M430 956 L430 350" class="arrow"/>
+  <path d="M1570 618 L1570 350 L1240 350" class="arrow"/>
+  <path d="M1570 770 L1570 350" class="arrow"/>
+  <path d="M1360 1360 L1240 1360 L1240 350" class="arrow"/>
+  <path d="M1000 850 L1000 350" class="arrow"/>
+  <text x="1260" y="372" class="small">возврат в цикл ожидания событий</text>
+
+  <!-- Close session -->
+  <path d="M1000 442 L1000 1450" class="arrow-dash"/>
+  <text x="1012" y="980" class="small">событие: закрытие вкладки</text>
+
+  <!-- Legend -->
+  <rect x="70" y="1170" width="560" height="350" rx="14" class="legend"/>
+  <text x="350" y="1210" text-anchor="middle" class="label">Легенда ГОСТ 19.701-90</text>
+
+  <ellipse cx="130" cy="1260" rx="45" ry="20" class="term"/>
+  <text x="195" y="1266" class="small">Терминатор</text>
+
+  <rect x="85" y="1300" width="90" height="40" class="proc"/>
+  <text x="195" y="1326" class="small">Процесс</text>
+
+  <polygon points="130,1358 175,1386 130,1414 85,1386" class="dec"/>
+  <text x="195" y="1391" class="small">Решение</text>
+
+  <polygon points="95,1438 185,1438 175,1478 85,1478" class="io"/>
+  <text x="195" y="1465" class="small">Ввод/вывод</text>
+
+  <ellipse cx="130" cy="1510" rx="45" ry="10" class="data"/>
+  <rect x="85" y="1510" width="90" height="24" class="data"/>
+  <ellipse cx="130" cy="1534" rx="45" ry="10" class="data"/>
+  <text x="195" y="1524" class="small">Хранилище данных</text>
+</svg>
