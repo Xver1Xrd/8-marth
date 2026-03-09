@@ -145,11 +145,56 @@
       .filter(Boolean)
       .forEach((item) => {
         map.set(item.id, item);
-      });
+    });
     return map;
   }
 
-  async function loadFolderPhotoNamesFromManifest() {
+  function normalizeManifestPhotoEntry(rawItem) {
+    if (typeof rawItem === "string") {
+      const fileName = cleanFolderFileName(rawItem);
+      if (!isPhotoFileName(fileName)) {
+        return null;
+      }
+      return { fileName, caption: "" };
+    }
+
+    if (!rawItem || typeof rawItem !== "object") {
+      return null;
+    }
+
+    const fileCandidate =
+      typeof rawItem.file === "string"
+        ? rawItem.file
+        : typeof rawItem.name === "string"
+          ? rawItem.name
+          : typeof rawItem.src === "string"
+            ? rawItem.src
+            : "";
+    const fileName = cleanFolderFileName(fileCandidate);
+    if (!isPhotoFileName(fileName)) {
+      return null;
+    }
+
+    return {
+      fileName,
+      caption: typeof rawItem.caption === "string" ? rawItem.caption.trim() : "",
+    };
+  }
+
+  function dedupeAndSortFolderEntries(entries) {
+    const map = new Map();
+    entries.forEach((entry) => {
+      const previous = map.get(entry.fileName);
+      if (!previous || (!previous.caption && entry.caption)) {
+        map.set(entry.fileName, entry);
+      }
+    });
+    const unique = Array.from(map.values());
+    unique.sort((a, b) => a.fileName.localeCompare(b.fileName, "ru", { numeric: true, sensitivity: "base" }));
+    return unique;
+  }
+
+  async function loadFolderPhotoEntriesFromManifest() {
     try {
       const response = await fetch(PHOTO_MANIFEST_PATH, { cache: "no-store" });
       if (!response.ok) {
@@ -162,18 +207,16 @@
         : Array.isArray(payload?.photos)
           ? payload.photos
           : [];
-      const names = source
-        .map((item) => cleanFolderFileName(String(item)))
-        .filter((name) => isPhotoFileName(name));
-      const unique = Array.from(new Set(names));
-      unique.sort((a, b) => a.localeCompare(b, "ru", { numeric: true, sensitivity: "base" }));
-      return unique;
+      const entries = source
+        .map((item) => normalizeManifestPhotoEntry(item))
+        .filter(Boolean);
+      return dedupeAndSortFolderEntries(entries);
     } catch {
       return [];
     }
   }
 
-  async function loadFolderPhotoNamesFromDirectory() {
+  async function loadFolderPhotoEntriesFromDirectory() {
     try {
       const response = await fetch(PHOTO_FOLDER_PATH, { cache: "no-store" });
       if (!response.ok) {
@@ -183,35 +226,35 @@
       const html = await response.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
-      const names = Array.from(doc.querySelectorAll("a"))
+      const entries = Array.from(doc.querySelectorAll("a"))
         .map((link) => cleanFolderFileName(link.getAttribute("href") || ""))
-        .filter((name) => isPhotoFileName(name));
-      const unique = Array.from(new Set(names));
-      unique.sort((a, b) => a.localeCompare(b, "ru", { numeric: true, sensitivity: "base" }));
-      return unique;
+        .filter((name) => isPhotoFileName(name))
+        .map((fileName) => ({ fileName, caption: "" }));
+      return dedupeAndSortFolderEntries(entries);
     } catch {
       return [];
     }
   }
 
-  async function listFolderPhotoNames() {
-    const fromManifest = await loadFolderPhotoNamesFromManifest();
+  async function listFolderPhotoEntries() {
+    const fromManifest = await loadFolderPhotoEntriesFromManifest();
     if (fromManifest.length > 0) {
       return fromManifest;
     }
-    return loadFolderPhotoNamesFromDirectory();
+    return loadFolderPhotoEntriesFromDirectory();
   }
 
   async function loadFolderPhotos() {
-    const fileNames = await listFolderPhotoNames();
+    const folderEntries = await listFolderPhotoEntries();
     const savedMeta = readSavedPhotoMetaMap();
-    return fileNames.slice(0, 24).map((fileName, index) => {
-      const id = createFolderPhotoId(fileName);
+    return folderEntries.slice(0, 24).map((entry, index) => {
+      const id = createFolderPhotoId(entry.fileName);
       const restored = savedMeta.get(id);
+      const hasSavedCaption = typeof restored?.caption === "string" && restored.caption.trim().length > 0;
       return {
         id,
-        dataUrl: buildFolderPhotoUrl(fileName),
-        caption: restored?.caption || "",
+        dataUrl: buildFolderPhotoUrl(entry.fileName),
+        caption: hasSavedCaption ? restored.caption : entry.caption || "",
         ts: restored?.ts ?? Date.now() + index,
       };
     });
